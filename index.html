@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary</title>
+</head>
+
+<body>
+    <h1>Vocabulary quiz</h1>
+    
+    <form>
+        <label for="word" class="label">Translation</label>
+        <input type="text" id="word">
+        <button class="btn-next">Next</button>
+    </form>
+
+    <form class="newTranslationForm">
+        <input type="text" name="word" id="newWord" placeholder="New word">
+        <input type="text" name="translation" id="newTranslation" placeholder="Translation">
+        <button type="submit">Save word</button>
+    </form>
+
+    <script>
+        const BASE_URL = "http://localhost:8000";
+
+        document.addEventListener("DOMContentLoaded", init);
+
+        async function init() {
+            try {
+                const quizWords = await fetchQuiz();
+                setupQuiz(quizWords);
+                setupForm();
+            } catch (err) {
+                console.error(err);
+                showError("Failed to load quiz. Please refresh.");
+            }
+        }
+
+        // -------------------- API --------------------
+
+        async function fetchQuiz() {
+            const res = await fetch(`${BASE_URL}/quiz`);
+
+            if (!res.ok) {
+                throw new Error("Failed to fetch quiz");
+            }
+
+            const data = await res.json();
+            console.log("Quiz data:", data);
+            return data;
+        }
+
+        async function postTranslation(data) {
+            const res = await fetch(`${BASE_URL}/translation`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (!res.ok) {
+                throw new Error("Failed to save translation");
+            }
+
+            return res.json();
+        }
+
+        // -------------------- QUIZ --------------------
+
+        function setupQuiz(quizWords) {
+            const label = document.querySelector(".label");
+            const wordInput = document.querySelector("#word");
+            const button = document.querySelector(".btn-next");
+
+            if (!label || !wordInput || !button) {
+                throw new Error("Missing quiz elements");
+            }
+
+            let index = 0;
+
+            const render = () => {
+                const [, translation] = quizWords[index];
+                label.textContent = translation;
+                wordInput.value = "";
+            };
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+
+                const [word] = quizWords[index];
+                const userInput = wordInput.value.trim();
+
+                if (!userInput) return;
+
+                if (userInput !== word) {
+                    alert(`Correct answer: ${word}`);
+                    return;
+                }
+
+                index++;
+
+                if (index < quizWords.length) {
+                    alert("Correct!");
+                    render();
+                } else {
+                    showSuccess();
+                }
+            };
+
+            button.addEventListener("click", handleSubmit);
+
+            // optional: submit on Enter key
+            wordInput.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    handleSubmit(e);
+                }
+            });
+
+            render();
+        }
+
+        function showSuccess() {
+            document.body.innerHTML = `
+                <h1>✨🏆🎉👏🥳 Congratulations 🎉🥳🎉👏🎊</h1>
+            `;
+        }
+
+        // -------------------- FORM --------------------
+
+        function setupForm() {
+            const form = document.querySelector(".newTranslationForm");
+            if (!form) return;
+
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+
+                try {
+                    const result = await postTranslation(data);
+                    console.log("Saved:", result);
+                    form.reset();
+                } catch (err) {
+                    console.error(err);
+                    alert("Failed to save translation");
+                }
+            });
+        }
+
+        // -------------------- UI --------------------
+
+        function showError(message) {
+            alert(message);
+        }
+    </script>
+</body>
+
+</html>
