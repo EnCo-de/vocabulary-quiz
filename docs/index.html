@@ -5,22 +5,205 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vocabulary</title>
+
+
+    <style>
+      :root {
+        --bg: #f5f7ff;
+        --primary: #6366f1;
+        --purple: #8b5cf6;
+        --pink: #ec4899;
+        --cyan: #06b6d4;
+        --green: #10b981;
+
+        --text: #172033;
+        --muted: #64748b;
+
+        --card: rgba(255, 255, 255, 0.78);
+        --border: rgba(255, 255, 255, 0.9);
+
+        --radius: 28px;
+
+        --shadow:
+          0 25px 60px rgba(99, 102, 241, 0.15),
+          inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        padding: 24px 16px;
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', Arial,
+          sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, #c7d2fe, transparent 35%),
+          radial-gradient(circle at top right, #fbcfe8, transparent 35%),
+          linear-gradient(160deg, #f8fafc, #eef2ff);
+      }
+
+      main {
+        width: 100%;
+        max-width: 430px;
+        margin: auto;
+      }
+
+      /* Header */
+
+      h1 {
+        margin: 30px 0 28px;
+        font-size: 36px;
+        line-height: 1.1;
+        letter-spacing: -1.2px;
+        font-weight: 800;
+        background: linear-gradient(120deg, #4338ca, #db2777, #0891b2);
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+
+      /* Glass cards */
+
+      form {
+        padding: 24px;
+        margin-bottom: 20px;
+        border-radius: var(--radius);
+        background: var(--card);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+      }
+
+      /* Labels */
+
+      .label {
+        display: block;
+        margin-bottom: 10px;
+        color: var(--text);
+        font-size: 19px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+      }
+
+      /* Inputs */
+
+      input {
+        width: 100%;
+        height: 60px;
+        padding: 0 18px;
+        margin-bottom: 16px;
+        border-radius: 18px;
+        border: 1.5px solid #e2e8f0;
+        background: linear-gradient(180deg, #ffffff, #f8fafc);
+        color: #0f172a;
+        font-size: 19px;
+        font-weight: 550;
+        outline: none;
+        transition: 0.25s;
+      }
+
+      input::placeholder {
+        color: #94a3b8;
+        font-size: 17px;
+        font-weight: 450;
+      }
+
+      input:focus {
+        background: white;
+        border-color: #6366f1;
+        box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.15);
+      }
+
+      /* Buttons */
+
+      button {
+        width: 100%;
+        height: 58px;
+        border: 0;
+        border-radius: 18px;
+        color: white;
+        font-size: 17px;
+        font-weight: 750;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+      button:active {
+        transform: scale(0.97);
+      }
+
+      .btn-next {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        box-shadow: 0 12px 30px rgba(99, 102, 241, 0.35);
+      }
+
+      /* Add button */
+
+      .btn-add {
+        margin-bottom: 18px;
+        background: linear-gradient(135deg, #06b6d4, #10b981);
+        box-shadow: 0 12px 30px rgba(6, 182, 212, 0.3);
+      }
+
+      /* Collapsible form */
+
+      .newTranslationForm {
+        display: none;
+        animation: showForm 0.3s ease;
+      }
+
+      .newTranslationForm.open {
+        display: block;
+      }
+
+      .newTranslationForm button {
+        background: linear-gradient(135deg, #ec4899, #f97316);
+        box-shadow: 0 12px 30px rgba(236, 72, 153, 0.3);
+      }
+
+      @keyframes showForm {
+        from {
+          opacity: 0;
+          transform: translateY(-15px) scale(0.98);
+        }
+
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      @media (min-width: 600px) {
+        body {
+          padding-top: 70px;
+        }
+      }
+    </style>
 </head>
 
 <body>
-    <h1>Vocabulary quiz</h1>
-    
-    <form>
-        <label for="word" class="label">Translation</label>
-        <input type="text" id="word">
-        <button class="btn-next">Next</button>
-    </form>
+    <main>
+        <h1>Vocabulary quiz ✨</h1>
+        
+        <form>
+            <label for="word" class="label">Translation</label>
+            <input type="text" id="word" placeholder="Enter the word...">
+            <button class="btn-next">Next →</button>
+        </form>
 
-    <form class="newTranslationForm">
-        <input type="text" name="word" id="newWord" placeholder="New word">
-        <input type="text" name="translation" id="newTranslation" placeholder="Translation">
-        <button type="submit">Save word</button>
-    </form>
+        <button class="btn-add" type="button">+ Add new word</button>
+    
+        <form class="newTranslationForm">
+            <input type="text" name="word" id="newWord" placeholder="New word">
+            <input type="text" name="translation" id="newTranslation" placeholder="Translation">
+            <button type="submit">Save word ✓</button>
+        </form>
+    </main>
 
     <script>
         const BASE_URL = "https://translations.pythonanywhere.com";
@@ -124,14 +307,25 @@
 
         function showSuccess() {
             document.body.innerHTML = `
-                <h1>✨🏆🎉👏🥳 Congratulations 🎉🥳🎉👏🎊</h1>
+                <div class="success">
+                    <h1>✨🏆🎉👏🥳 Congratulations 🎉🥳🎉👏🎊</h1>
+                    <p>You completed the vocabulary quiz.</p>
+                    <button onclick="location.reload()">Play Again</button>
+                </div>
             `;
         }
 
         // -------------------- FORM --------------------
 
+        const addButton = document.querySelector(".btn-add")
+
+        const form = document.querySelector(".newTranslationForm");
+
+        addButton.addEventListener('click', () => {
+          form.classList.toggle('open')
+        })
+
         function setupForm() {
-            const form = document.querySelector(".newTranslationForm");
             if (!form) return;
 
             form.addEventListener("submit", async (e) => {
