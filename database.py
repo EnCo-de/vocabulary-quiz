@@ -6,7 +6,6 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
-from models import Base
 
 
 DATABASE_URL = "sqlite+aiosqlite:///./vocabulary.db"
@@ -16,18 +15,14 @@ engine = create_async_engine(
     echo=False,
 )
 
-async_session_factory = async_sessionmaker(
-    engine,
+
+AsyncSessionLocal = async_sessionmaker(
+    bind=engine,
     class_=AsyncSession,
     expire_on_commit=False,
 )
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
-    async with async_session_factory() as session:
+    async with AsyncSessionLocal() as session:
         yield session
-
-
-async def create_tables() -> None:
-    async with engine.begin() as connection:
-        await connection.run_sync(Base.metadata.create_all)
