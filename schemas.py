@@ -74,7 +74,7 @@ class CourseResponse(SchemaBase):
 
 class LessonCreate(BaseModel):
     title: str = Field(min_length=1, max_length=100)
-    description:     description: str | None = Field(
+    description: str | None = Field(
         default=None,
         max_length=500,
     )
